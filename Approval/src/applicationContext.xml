@@ -27,7 +27,7 @@
 			value="jdbc:sqlserver://192.168.0.254:5657;databaseName=x3v65">
 		</property>-->
 	
-		<property name="username" value="LTCTEST"></property>
+		<property name="username" value="*****"></property>
 		<property name="password" value="tiger"></property>
 	</bean>
 	
