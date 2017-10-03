@@ -1,0 +1,136 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport"content="width=device-width, initial-scale=1"/>
+<title>钉钉审批</title>
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="js/jquery-1.4.3.js"></script> 
+    <script  type="text/javascript">
+        window.onload = function (){
+        	var sourceDocument;
+        	$.ajax({
+                url:'${ dataurl }',
+                type:'get',
+                dataType: 'json',
+                success: function(ary){
+            for(var i=0; i<ary.length; i++){
+                var obj = ary[i];
+                var state;
+                console.log(obj)
+                if(obj.zppsta_0=="3"){
+                	state="已审批"
+                }else{
+                	state='未审批'
+                }
+                if(obj.zppcdes_0=="订单管理"){
+                $('#map2-result').append(
+                		'<a href="DPage?number='+obj.zppori_0+'&state='+obj.zppsta_0+'" style="text-decoration:none;color:#000;"><div style="margin-bottom:2em;margin-top: 2em; "><p>'+
+                        '审批单号:&emsp;&nbsp;<span  style=" font-size:0.8em;">'+
+                        obj.zppnum_0+'</span></p>'+
+                        '<br><p>原始单据号:&nbsp;<span  class="sd">'+obj.zppori_0+
+                        '</span></p><br>'+'单据类型:&emsp;&nbsp;'+
+                        obj.zppcdes_0+'</p><br><p>'+'审批状态:&nbsp;&nbsp;&emsp;'+state+
+                        '&emsp;&emsp;&emsp;当前审批人:&nbsp;'+obj.zptnumdes_0+'</p><br><p>'+
+                        '提交时间:&nbsp;&nbsp;&emsp;'+obj.zppdat_0+'</p></div></a><hr>');
+                }
+                var sr = document.getElementById('1');    //获取采购请求
+        		var ptp = document.getElementById('2');   //获取采购付款
+        		var so = document.getElementById('3');    //获取销售订单
+        		
+        		var all = document.getElementById('4');    //获取销售订单
+            	
+            	all.onclick = function() {
+            		if(obj.zppsta_0=="3"){
+        				window.location.href="check" //当点击采购请求时跳转
+        				}else{
+        					window.location.href="checkA" 	
+        				}		//当点击采购请求时跳转
+        		}
+        		
+        			sr.onclick = function() {
+        				window.location.href="sr" 		//当点击采购请求时跳转
+        		}
+        			ptp.onclick = function() {
+        				window.location.href="ptp" 		//当点击采购付款时跳转
+        		}
+        			so.onclick = function() {
+        				window.location.href="so" 		//当点击销售订单时跳转
+        		}
+             }
+           }      
+        })
+        $(document).click(function(e) { // 在页面任意位置点击而触发此事件
+                 sourceDocument=($(e.target).attr("class"));       // e.target表示被点击的目标
+            })
+        $(document).click(function(e) { // 在页面任意位置点击而触发此事件
+    		if(sourceDocument=="sd"){
+            var number=($(e.target).attr("innerHTML"));       // e.target表示被点击的目标
+            window.location.href="DPage?number="+number;      //跳转到详情页面 并将原始单号number发送到后台
+    		}
+        })
+		var sr = document.getElementById('1');    //获取采购请求
+		var ptp = document.getElementById('2');   //获取采购付款
+		var so = document.getElementById('3');    //获取销售订单
+		
+		var all = document.getElementById('4');    //获取销售订单
+    	
+    	all.onclick = function() {
+			window.location.href="check" 		//当点击采购请求时跳转
+		}
+		
+			sr.onclick = function() {
+				window.location.href="sr" 		//当点击采购请求时跳转
+		}
+			ptp.onclick = function() {
+				window.location.href="ptp" 		//当点击采购付款时跳转
+		}
+			so.onclick = function() {
+				window.location.href="so" 		//当点击销售订单时跳转
+		}
+
+}
+    </script>
+        <style>
+        #map2-result{
+            margin-top: 2em; 
+            margin-left: 2em; 
+            margin-bottom:2em; 
+            line-height:1em;
+            font-family:"等线";
+            font-size:3em;
+        }
+        li{
+        font-size:1em;
+        padding-bottom:0.5em;
+        padding-top:0.5em;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <section>
+            <section>
+                <header id="header">
+                    <div>审批单据</div>
+                </header>
+                <footer id="footer">
+                    <ul>
+                    	<li id="4">全部</li>
+                        <li id="1">采购请求</li>
+                        <li id="2">采购付款</li>
+                        <li class="current" id="3">销售订单</li>
+                    </ul>
+                </footer>
+            </section>
+        </section>
+    </section>
+    <br>
+	    <div id="map2-result" style=" font-size: 0.8em;">
+	    </div>
+    </body>
+</html>

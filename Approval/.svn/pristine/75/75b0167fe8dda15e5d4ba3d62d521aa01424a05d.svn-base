@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.mingge.dao.ZappdataBernieDao">
+
+	
+	<!-- 根据电话号码查询 -->
+
+	<select id="queryAutilis" resultType="Autilis">
+		select USR_0,NOMUSR_0,YDDUSR_0
+		,AUS.ZPTNUM_0,ISNULL(ZP1.ZPTDES_0,' ') ZPTDES_0,AUS.ZPTNUM_1,ISNULL(ZP2.ZPTDES_0,' ') ZPTDES_1
+		,AUS.ZPTNUM_2,ISNULL(ZP3.ZPTDES_0,' ') ZPTDES_2,AUS.ZPTNUM_3,ISNULL(ZP4.ZPTDES_0,' ') ZPTDES_3
+		,AUS.ZPTNUM_4,ISNULL(ZP5.ZPTDES_0,' ') ZPTDES_4,AUS.ZPTNUM_5,ISNULL(ZP6.ZPTDES_0,' ') ZPTDES_5
+		,AUS.ZPTNUM_6,ISNULL(ZP7.ZPTDES_0,' ') ZPTDES_6,AUS.ZPTNUM_7,ISNULL(ZP8.ZPTDES_0,' ') ZPTDES_7
+		,AUS.ZPTNUM_8,ISNULL(ZP9.ZPTDES_0,' ') ZPTDES_8,AUS.ZPTNUM_9,ISNULL(ZP10.ZPTDES_0,' ') ZPTDES_9
+		from LTCTEST.AUTILIS AUS
+		LEFT JOIN ZEAAPOST ZP1 ON ZP1.ZPTNUM_0=AUS.ZPTNUM_0
+		LEFT JOIN ZEAAPOST ZP2 ON ZP2.ZPTNUM_0=AUS.ZPTNUM_1
+		LEFT JOIN ZEAAPOST ZP3 ON ZP3.ZPTNUM_0=AUS.ZPTNUM_2
+		LEFT JOIN ZEAAPOST ZP4 ON ZP4.ZPTNUM_0=AUS.ZPTNUM_3
+		LEFT JOIN ZEAAPOST ZP5 ON ZP5.ZPTNUM_0=AUS.ZPTNUM_4
+		LEFT JOIN ZEAAPOST ZP6 ON ZP6.ZPTNUM_0=AUS.ZPTNUM_5
+		LEFT JOIN ZEAAPOST ZP7 ON ZP7.ZPTNUM_0=AUS.ZPTNUM_6
+		LEFT JOIN ZEAAPOST ZP8 ON ZP8.ZPTNUM_0=AUS.ZPTNUM_7
+		LEFT JOIN ZEAAPOST ZP9 ON ZP9.ZPTNUM_0=AUS.ZPTNUM_8
+		LEFT JOIN ZEAAPOST ZP10 ON ZP10.ZPTNUM_0=AUS.ZPTNUM_9
+		where YDDUSR_0=#{yddusr_0 };
+	</select>
+	<!-- 根据职位，状态为已审批查询 -->
+	<select id="queryZappdata" resultType="Zappdata">
+		select * from LTCTEST.ZAPPDATA where ZPTNUM_0 in 
+			<foreach collection="num" item="num"  open="(" separator="," close=")">  
+        		#{num }  
+    		</foreach>  
+		 and ZPPSTA_0=3 order by ZPPDAT_0 desc,ZPPORI_0 desc
+	</select>
+	<!-- 根据原始单据号， 状态为已审批  查询 -->
+	<select id="queryZappdataTo" resultType="Zappdata">
+		select * from LTCTEST.ZAPPDATA where ZPPORI_0=#{zppori_0 } and ZPPSTA_0=3 order by ZPPDAT_0 desc,ZPPORI_0 desc
+	</select>
+	<!-- 根据职位，状态为未审批，当前审批为是 查询 -->
+	<select id="queryZappdataTwo" resultType="Zappdata">
+		select * from LTCTEST.ZAPPDATA where ZPTNUM_0 in 
+			<foreach collection="num" item="num"  open="(" separator="," close=")">  
+        		#{num }  
+    		</foreach>  
+		 and ZPPSTA_0&lt;=2 and ZPPCURR_0=2  order by ZPPDAT_0 desc,ZPPORI_0 desc
+	</select>
+	<!-- 根据原始单据号， 当前审批为是 ，状态为未审批  查询 -->
+	<select id="queryZappdataUp" resultType="Zappdata">
+		select * from LTCTEST.ZAPPDATA where ZPPORI_0=#{zppori_0 } and ZPPCURR_0=2 and ZPPSTA_0&lt;=2 order by ZPPDAT_0 desc,ZPPORI_0 desc
+	</select>
+	
+	<!-- 根据id查询 -->
+	<select id="queryZappdataUpOne" resultType="Zappdata">
+		select * from LTCTEST.ZAPPDATA where ROWID=#{rowid} order by ZPPDAT_0 desc,ZPPORI_0 desc
+	</select>
+	<!-- 根据原始单据查询，采购表 -->
+	<select id="queruyPrequis" resultType="Prequis">
+		select * from LTCTEST.PREQUIS where PSHNUM_0=#{pshnum_0 }
+	</select>
+	<!-- 根据原始单据查询，销售订单表 -->
+	<select id="queruySorder" resultType="Sorder">
+		select * from LTCTEST.SORDER where SOHNUM_0=#{sohnum_0 }
+	</select>
+	<!-- 根据原始单据查询，付款表 -->
+	<select id="queruyPaymenth" resultType="Paymenth">
+		select * from LTCTEST.PAYMENTH where NUM_0=#{num_0 }
+	</select>
+	<!-- 根据原始单据号更新，采购表 -->
+	<update id="updatePrequis" parameterType="Prequis">
+		UPDATE LTCTEST.PREQUIS SET ZPPSTA_0=3 where PSHNUM_0=#{pshnum_0 }
+	</update> 
+	<!-- 根据原始单据号更新，销售订单表 -->
+	<update id="updateSorder" parameterType="Sorder">
+		UPDATE LTCTEST.SORDER SET ZPPSTA_0=3 where SOHNUM_0=#{sohnum_0 }
+	</update> 
+	<!-- 根据原始单据号更新，付款表 -->
+	<update id="updatePaymenth" parameterType="Paymenth">
+		UPDATE LTCTEST.PAYMENTH SET ZPPSTA_0=3 where NUM_0=#{num_0 }
+	</update> 
+	<!-- 根据原始单据号更新下级审批状态，审批表 -->
+	<update id="updateZappdataOne" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPCURR_0=2,YUSUAN_0=1,YFAWUQZ_0=1  where ZPPNUM_0=#{zppnumb_0 }
+	</update> 
+	<!-- 根据原始单据号更新下级审批状态，审批表 -->
+	<update id="updateZappdataOneA" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPCURR_0=2,YUSUAN_0=2,YFAWUQZ_0=2 where ZPPNUM_0=#{zppnumb_0 }
+	</update> 
+	<!-- 根据原始单据号更新下级审批状态，审批表 -->
+	<update id="updateZappdataOneB" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPCURR_0=2,YUSUAN_0=2,YFAWUQZ_0=1 where ZPPNUM_0=#{zppnumb_0 }
+	</update> 
+	<!-- 根据原始单据号更新下级审批状态，审批表 -->
+	<update id="updateZappdataOneC" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPCURR_0=2,YUSUAN_0=1,YFAWUQZ_0=2 where ZPPNUM_0=#{zppnumb_0 }
+	</update> 
+	<!-- 根据id更新审批表-->
+	<update id="updateZappdata" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPCURR_0=1,ZPPSTA_0=3,ZPPMEMO_0=#{zppmemo_0},ZPPAGR_0=2,ZPPUSR_0=#{zppusr_0},ZPPUSRDES_0=#{zppusrdes_0},ZPPADAT_0=#{zppadat_0},ZPPTIM_0=#{zpptim_0},YUSUAN_0=#{yusuan_0},YFAWUQZ_0=#{yfawuqz_0} where ROWID=#{rowid }
+	</update> 
+	<!-- 根据id更新审批表-->
+	<update id="updateZappdataTo" parameterType="Zappdata"> 
+		UPDATE LTCTEST.ZAPPDATA SET ZPPMEMO_0=#{zppmemo_0},ZPPAGR_0=1,ZPPUSR_0=#{zppusr_0},ZPPUSRDES_0=#{zppusrdes_0},ZPPADAT_0=#{zppadat_0},ZPPTIM_0=#{zpptim_0},ZPPSTA_0=3,ZPPCURR_0=1,ZPPRET_0=2,YUSUAN_0=#{yusuan_0},YFAWUQZ_0=#{yfawuqz_0}  where ROWID=#{rowid }
+	</update >
+	<!-- 根据原始单号更新审批表-->
+	<update id="updateZappdataThree" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA  set ZPPRET_0=2 WHERE ZPPORI_0=#{zppori_0}  
+	</update>
+	<!-- 根据原始单号，状态为1删除数据-->
+	<delete id="deleteZappdata" parameterType="Zappdata">
+		delete from LTCTEST.ZAPPDATA where ZPPORI_0=#{zppori_0 } and ZPPSTA_0&lt;=2
+	</delete>
+	<!-- 根据原始单据号更新，采购表 -->
+	<update id="updatePrequisOn" parameterType="Prequis">
+		UPDATE LTCTEST.PREQUIS SET ZPPSTA_0=1,ZPPRET_0=2 where PSHNUM_0=#{pshnum_0 }
+	</update> 
+	<!-- 根据原始单据号更新，销售订单表-->
+	<update id="updateSorderOn" parameterType="Sorder">
+		UPDATE LTCTEST.SORDER SET ZPPSTA_0=1,ZPPRET_0=2 where SOHNUM_0=#{sohnum_0 }
+	</update> 
+		<!-- 根据原始单据号更新，付款表 -->
+	<update id="updatePaymenthOn" parameterType="Paymenth">
+		UPDATE LTCTEST.PAYMENTH SET ZPPSTA_0=1,ZPPRET_0=2 where NUM_0=#{num_0 }
+	</update> 	
+
+<!-- 审批不同意 -->
+	<!-- 1 回写本级单据 -->
+	<update id="updateZappdata1" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPMEMO_0=#{zppmemo_0},ZPPAGR_0=1,ZPPUSR_0=#{zppusr_0},ZPPUSRDES_0=#{zppusrdes_0},ZPPADAT_0=#{zppadat_0},ZPPTIM_0=#{zpptim_0},ZPPSTA_0=3,ZPPRET_0=2,ZPPCURR_0=1,YUPDATE_0=1 where ROWID=#{rowid };
+	</update>
+	<!-- 1.1 回写上级单据 -->
+	<update id="updateZappdata11" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPRET_0=2,ZPPNUMB_0=#{zppnum_0 } where ZPPNUM_0 = (SELECT ZPPNUMP_0 FROM LTCTEST.ZAPPDATA WHERE ROWID=#{rowid } );
+	</update>
+	<!-- 1.2 回写下级单据 -->
+	<update id="updateZappdata12" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPNUMP_0=#{zppnum_0 } where ZPPNUM_0 = (SELECT ZPPNUMB_0 FROM LTCTEST.ZAPPDATA WHERE ROWID=#{rowid } );
+	</update>	
+	<!-- 2 复制产生上级单据 -->
+	<insert id="insertZappdata2" parameterType="Zappdata">
+		INSERT INTO LTCTEST.ZAPPDATA 
+		SELECT #{zppnump_0 },convert(varchar(10),getdate(),112),CODINT_0,ZPPCDES_0,ZPPORI_0,ZPPLINORI_0,ZPPSEQORI_0,ZTPNUM_0,ZTDLIN_0,
+			ZTDSEQ_0,2,ZPPUSR1_0,ZPPUSR2_0,ZPPUSR3_0,ZPPUSR4_0,ZPPUSR5_0,ZPTNUM_0,ZPTNUMDES_0,
+			ZPPUSR_0,ZPPUSRDES_0,Convert(varchar(100),GETDATE(),23),Convert(varchar(100),GETDATE(),24),1,2,0,' ',ZPPNUMP_0,
+			#{zppnum_0 },YBPR_0,2,1,YFCY_0,YFCYDES_0,1,1,0
+		FROM LTCTEST.ZAPPDATA WHERE ZPPNUM_0= (
+		select ZPPNUMP_0 from LTCTEST.ZAPPDATA WHERE ROWID=#{rowid });
+	</insert> 
+	<!-- 3 复制产生本级单据 -->
+	<insert id="insertZappdata3" parameterType="Zappdata">
+		INSERT INTO LTCTEST.ZAPPDATA 
+		SELECT #{zppnum_0},convert(varchar(10),getdate(),112),CODINT_0,ZPPCDES_0,ZPPORI_0,ZPPLINORI_0,ZPPSEQORI_0,ZTPNUM_0,ZTDLIN_0,
+			ZTDSEQ_0,2,ZPPUSR1_0,ZPPUSR2_0,ZPPUSR3_0,ZPPUSR4_0,ZPPUSR5_0,ZPTNUM_0,ZPTNUMDES_0,
+			ZPPUSR_0,ZPPUSRDES_0,Convert(varchar(100),GETDATE(),23),Convert(varchar(100),GETDATE(),24),1,1,0,' ',#{zppnump_0},
+			ZPPNUMB_0,YBPR_0,2,1,YFCY_0,YFCYDES_0,1,1,0
+		FROM LTCTEST.ZAPPDATA WHERE ROWID=#{rowid };
+	</insert> 
+<!-- 增加职务 -->
+    <!-- 查询下表有"_"的数据-->
+	<select id="queryZappdata1" resultType="String">
+		select ZPPNUM_0 from LTCTEST.ZAPPDATA WHERE ZPPNUM_0  like '${zppnum_0 }%' and ZPPNUM_0 like '%[_]%'; 	
+	</select>
+	<!-- 1 回写上级单据 下级单据=下级+'_A' -->	
+	<update id="updateZappdataA1" parameterType="Zappdata">
+		UPDATE  LTCTEST.ZAPPDATA SET ZPPNUMB_0=ZPPNUMB_0+'_A'
+		where ZPPNUM_0 = (
+		SELECT ZPPNUMP_0 FROM LTCTEST.ZAPPDATA WHERE ROWID=#{rowid } );
+	</update>
+	<!-- 重复添加审批人时 回写上级单据的下级单据=本级单据+‘_A’-->	
+	<update id="updateZappdataA12" parameterType="Zappdata">
+		UPDATE  LTCTEST.ZAPPDATA SET ZPPNUMB_0=#{zppnum_0 }
+		where ZPPNUM_0 = (
+		SELECT ZPPNUMP_0 FROM LTCTEST.ZAPPDATA WHERE ROWID=#{rowid } );
+	</update>	
+	<!-- 2 回写本级单据 当前审批为否 上级单据=上级单据+'_A'-->
+	<update id="updateZappdataA2" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPCURR_0=1,ZPPNUMP_0=ZPPNUMP_0+'_A' where ROWID=#{rowid };
+	</update>
+	<!-- 2.1 回写本级单据 当前审批为否 如果没有上级单据，则上级单据=本级单据zppnum_0+'_A' -->	
+	<update id="updateZappdataA21" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPCURR_0=1,ZPPNUMP_0=#{zppnum_0} where ROWID=#{rowid };
+	</update>	
+	<!-- 2.2 回写本级单据 重复添加审批人时  当前审批为否 则上级单据=上级单据+'_A' -->	
+	<update id="updateZappdataA22" parameterType="Zappdata">
+		UPDATE LTCTEST.ZAPPDATA SET ZPPCURR_0=1,ZPPNUMP_0=#{zppnum_0 } where ROWID=#{rowid };
+	</update>	
+	<!-- 3 复制产生新单据 改写职务代码描述、当前审批为是、上下级单据-->
+	<insert id="insertZappdataA3" parameterType="Zappdata">
+		INSERT INTO LTCTEST.ZAPPDATA 
+		SELECT ZPPNUM_0+'_A',convert(varchar(10),getdate(),112),CODINT_0,ZPPCDES_0,ZPPORI_0,ZPPLINORI_0,ZPPSEQORI_0,ZTPNUM_0,ZTDLIN_0,
+			ZTDSEQ_0-1,2,ZPPUSR1_0,ZPPUSR2_0,ZPPUSR3_0,ZPPUSR4_0,ZPPUSR5_0,#{zptnum_0},#{zptnumdes_0},
+			ZPPUSR_0,ZPPUSRDES_0,Convert(varchar(100),GETDATE(),23),Convert(varchar(100),GETDATE(),24),1,2,0,' ',ZPPNUMP_0,
+			ZPPNUM_0,YBPR_0,2,1,YFCY_0,YFCYDES_0,1,1,0
+		FROM LTCTEST.ZAPPDATA WHERE ROWID=#{rowid };
+	</insert> 
+	<!-- 3.1当上级单据为空时，  复制产生新单据 改写职务代码描述、当前审批为是、上级单据为‘_A’,下级单据-->
+	<insert id="insertZappdataA31" parameterType="Zappdata">
+		INSERT INTO LTCTEST.ZAPPDATA 
+		SELECT #{zppnum_0},convert(varchar(10),getdate(),112),CODINT_0,ZPPCDES_0,ZPPORI_0,ZPPLINORI_0,ZPPSEQORI_0,ZTPNUM_0,ZTDLIN_0,
+			ZTDSEQ_0-1,2,ZPPUSR1_0,ZPPUSR2_0,ZPPUSR3_0,ZPPUSR4_0,ZPPUSR5_0,#{zptnum_0},#{zptnumdes_0},
+			ZPPUSR_0,ZPPUSRDES_0,Convert(varchar(100),GETDATE(),23),Convert(varchar(100),GETDATE(),24),1,2,0,' ',' ',
+			ZPPNUM_0,YBPR_0,2,1,YFCY_0,YFCYDES_0,1,1,0
+		FROM LTCTEST.ZAPPDATA WHERE ROWID=#{rowid };
+	</insert> 
+	<!-- 3.2重复添加审批人时  复制产生新单据 改写职务代码描述、当前审批为是、上下级单据-->
+	<insert id="insertZappdataA32" parameterType="Zappdata">
+		INSERT INTO LTCTEST.ZAPPDATA 
+		SELECT #{zppnum_0},convert(varchar(10),getdate(),112),CODINT_0,ZPPCDES_0,ZPPORI_0,ZPPLINORI_0,ZPPSEQORI_0,ZTPNUM_0,ZTDLIN_0,
+			ZTDSEQ_0-1,2,ZPPUSR1_0,ZPPUSR2_0,ZPPUSR3_0,ZPPUSR4_0,ZPPUSR5_0,#{zptnum_0},#{zptnumdes_0},
+			ZPPUSR_0,ZPPUSRDES_0,Convert(varchar(100),GETDATE(),23),Convert(varchar(100),GETDATE(),24),1,2,0,' ',ZPPNUMP_0,
+			ZPPNUM_0,YBPR_0,2,1,YFCY_0,YFCYDES_0,1,1,0
+		FROM LTCTEST.ZAPPDATA WHERE ROWID=#{rowid };
+	</insert> 
+<!-- 法务预算 -->
+	<!-- 1 复制产生新单据 改写审批单号、职务代码描述、当前审批、上下级单据-->
+	<insert id="insertZappdataB1" parameterType="Zappdata">
+		INSERT INTO LTCTEST.ZAPPDATA 
+		SELECT #{zppnum_0},convert(varchar(10),getdate(),112),CODINT_0,ZPPCDES_0,ZPPORI_0,ZPPLINORI_0,ZPPSEQORI_0,ZTPNUM_0,ZTDLIN_0,
+			ZTDSEQ_0-1,2,ZPPUSR1_0,ZPPUSR2_0,ZPPUSR3_0,ZPPUSR4_0,ZPPUSR5_0,#{zptnum_0},#{zptnumdes_0},
+			ZPPUSR_0,ZPPUSRDES_0,Convert(varchar(100),GETDATE(),23),Convert(varchar(100),GETDATE(),24),1,#{zppcurr_0},0,' ',#{zppnump_0},
+			#{zppnumb_0},YBPR_0,2,1,YFCY_0,YFCYDES_0,YUSUAN_0,YFAWUQZ_0,0
+		FROM LTCTEST.ZAPPDATA WHERE ROWID=#{rowid };
+	</insert> 
+<!-- 查询所有职位 -->
+	<select id="queryZeaapost" resultType="Zeaapost">
+		select * from LTCTEST.ZEAAPOST 
+	</select>
+
+<!-- 查询申请人 -->
+	<select id="queryCacce" resultType="Cacce">
+		select DES_0 from LTCTEST.CACCE WHERE CCE_0=#{cce_0}; 
+	</select>
+<!-- 查询申请人 -->
+	<select id="querySorderp" resultType="Sorderp">
+		select YCCE1_0 from LTCTEST.SORDERP WHERE SOHNUM_0=#{sohnum_0}; 
+	</select>
+
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+	<!--此处为Mysql连接
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver">
+		</property>
+		<property name="url" value="jdbc:mysql://localhost:3306/zyeg?useUnicode=true&amp;characterEncoding=UTF-8"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="admin"></property>
+	</bean> -->
+	<!-- 此处后期添加 sqlServer 连接 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver">
+	 	</property>
+
+
+	   <property name="url"
+			value="jdbc:sqlserver://7.201.215.108:5657;databaseName=x3v65">
+	   </property> 
+  		<!--
+		<property name="url"
+			value="jdbc:sqlserver://192.168.0.254:5657;databaseName=x3v65">
+		</property>-->
+	
+		<property name="username" value="LTCTEST"></property>
+		<property name="password" value="tiger"></property>
+	</bean>
+	
+	<!-- 连接Mybatis-config.xml 文件 -->
+	<bean id="sqlSessionfactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	</bean>
+	<!-- 产生接口实现的实例 -->
+	<!-- 测试框架类，不做开发使用 -->
+	<bean id="ZappdataDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.mingge.dao.ZappdataDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionfactory"></property>
+	</bean>
+	<!-- York 开发接口实现实例 -->
+	<bean id="ZappdataYorkDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.mingge.dao.ZappdataYorkDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionfactory"></property>
+	</bean>
+	<!--bernie 开发接口实现实例 -->
+	<bean id="ZappdataBernieDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.mingge.dao.ZappdataBernieDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionfactory"></property>
+	</bean>
+<!-- york 配置json start -->
+	<bean id="messageAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">  
+       <property name="messageConverters">  
+           <list>  
+               <!-- Support JSON -->   
+               <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>  
+           </list>
+          
+       </property>  
+   </bean>  
+    <bean id="exceptionMessageAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">  
+       <property name="messageConverters">  
+           <list>  
+               <!-- Support JSON -->   
+               <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>  
+          
+           </list> 
+       </property>  
+   </bean> 
+   <!-- york 配置json end -->
+
+	</beans>

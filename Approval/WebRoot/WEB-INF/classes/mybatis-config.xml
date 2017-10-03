@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "http://mybatis.org/dtd/mybatis-3-config.dtd" "mybatis-3-config.dtd" >
+
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.mingge.pojo.Zappdata" alias="Zappdata"/>
+		<typeAlias type="com.mingge.pojo.Autilis"  alias="Autilis"/>
+		<typeAlias type="com.mingge.pojo.Prequis"  alias="Prequis"/>
+		<typeAlias type="com.mingge.pojo.Ysqneir"  alias="Ysqneir"/>
+		<typeAlias type="com.mingge.pojo.Prequisd"  alias="Prequisd"/>
+		<typeAlias type="com.mingge.pojo.Sorder"   alias="Sorder"/>
+		<typeAlias type="com.mingge.pojo.Paymenth" alias="Paymenth"/>
+		<typeAlias type="com.mingge.pojo.Zeaapost" alias="Zeaapost"/>
+		<typeAlias type="com.mingge.pojo.Cacce" alias="Cacce"/>
+		<typeAlias type="com.mingge.pojo.Sorderp" alias="Sorderp"/>
+	</typeAliases>
+	
+ 
+	<mappers>
+		<!--  //此mapper为测试框架类，不作开发用途-->
+		<mapper resource="com/mingge/dao/ZappdataDaoMapper.xml"/>
+		<!-- York 开发mapper路径 -->
+		<mapper resource="com/mingge/dao/ZappdataYorkDaoMapper.xml"/>
+		<!-- bernie 开发mapper路径 -->
+		<mapper resource="com/mingge/dao/ZappdataBernieDaoMapper.xml"/>
+	</mappers>
+</configuration>

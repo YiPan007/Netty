@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<!--  /**
+ * @author Bernie
+ * 此Mapper为测试框架类，不作开发用途
+ */
+ -->
+<mapper namespace="com.mingge.dao.ZappdataDao">
+	  <select id="queryZappdata" resultType="Zappdata">
+		select * from LTCDEV.ZAPPDATA where ZTPNUM_0=1
+	</select>
+	<!--<select id="queryZappdata" resultType="Zappdata">
+		select * from ZAPPDATA 
+	</select>-->
+</mapper>

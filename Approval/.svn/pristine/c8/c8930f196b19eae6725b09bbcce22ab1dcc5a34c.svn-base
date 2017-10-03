@@ -1,0 +1,241 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+    
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>钉钉审批</title>
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/icon.css"/>
+    <script type="text/javascript" src="js/formatDate.js"></script>
+    <script type="text/javascript" src="js/jquery-1.4.3.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script  type="text/javascript">
+        window.onload = function (){
+        	var obj;
+            	$.ajax({
+                    url:'${ dataurl.dataurl }',
+                    type:'post',
+                    dataType: 'json',
+                    success: function(ary){
+            for(var i=0; i<ary.length; i++){
+                  obj = ary[i];
+                  console.log(obj)
+                var checked = obj.zppsta_0==3;
+                bst=obj.zppsta_0;
+                if(checked){
+                	var state="未审批"
+                    	if(obj.zppsta_0=="3"){
+                    		
+                    		state="已审批"
+                    	}
+                    	var fawuqz="否"
+                    	if(obj.yfawuqz_0=="2"){
+                    		fawuqz="是"
+                    	}
+                    	var yusuan="否"
+                    	if(obj.yusuan_0=="2"){
+                    		yusuan="是"
+                    	}
+                    	var zppagr="";
+                    	if(obj.zppagr_0=="1"){
+                    		zppagr="不同意"
+                    	}
+                    	if(obj.zppagr_0=="2"){
+                    		zppagr="同意"
+                    	}
+                    	var today=obj.zppadat_0;
+                    	var idea;
+                    	if(obj.zppmemo_0!==" "){
+                    		idea=obj.zppmemo_0;
+                    	}
+                    	 var page;
+                         if(page!=="1"){
+                          $('#map2-result').append(
+                             '<p>原始单据号&nbsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="zppori_0" value="'+obj.zppori_0+'">'+obj.zppori_0+'</p><hr>'+
+                             '<p>&emsp;提交人&emsp;&nbsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="zppusrdes_0" value="'+obj.zppusrdes_0+'">'+obj.zppusr4_0+'</p><hr>'+
+                             '<p>&emsp;申请人&emsp;&nbsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="zppusrdes_0" value="'+obj.zppusrdes_0+'">'+obj.zppusr5_0+'</p><hr>'+
+                             '<p>&nbsp;提交日期&emsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="xppdat_0" value="'+obj.zppdat_0+'">'+obj.zppdat_0+'</p><hr>'+
+                             '<p>&nbsp;审批状态&emsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="zppsta_0" value="'+states+'">'+state+'</p><hr>'+
+                             '<p>&nbsp;审批意见&emsp;<span>|</span>&emsp;'+obj.zppmemo_0+'</p><hr>'+
+                             '<p>&nbsp;预算内&emsp;&emsp;<span>|</span>&emsp;'+yusuan+'<hr>&emsp;</p>'+
+                             '<p>&nbsp;法务签字&emsp;<span>|</span>&emsp;'+fawuqz+'&emsp;</p>'
+                             
+                             );
+                          page="1"
+                         }
+                         $('#result').append(
+                                 '<tr">'+
+                                     '<td>'+obj.zppusrdes_0+'</td>'+
+                                     '<td>'+today+'</td>'+
+                                     '<td>'+zppagr+'</td>'+
+                                     '<td style="border-right: solid #fff;">'+idea+'</td>'+
+                                 '</tr>'
+                         );
+                        document.getElementById("btn1").disabled = true; //如何状态为已审批 ，则将按钮置灰
+                       	document.getElementById("btn2").disabled = true;
+                       	document.getElementById("btn3").disabled = true;
+                       	document.getElementById("btn4").disabled = true;
+                }else{
+                bst=obj.rowid;
+            	var state="未审批"
+            	if(obj.zppsta_0=="3"){
+            		
+            		state="已审批"
+            	}
+            	//var fawuqz="否"
+            	//if(obj.yfawuqz_0=="2"){
+            	//	fawuqz="是"
+            	//}
+            	var yusuan="否"
+            	if(obj.yusuan_0=="2"){
+            		yusuan="是"
+            	}
+            	var zppagr="";
+            	if(obj.zppagr_0=="1"){
+            		zppagr="不同意"
+            	}
+            	if(obj.zppagr_0=="2"){
+            		zppagr="同意"
+            	}
+            	var today=obj.zppadat_0;
+            	if(obj.zppadat_0==" "){
+            	var d = new Date();
+            	
+            	today =formatDate(d);
+            	}
+            	var idea;
+            	if(obj.zppmemo_0!==" "){
+            		idea=obj.zppmemo_0;
+            	}
+            	var yusuans = parseInt(obj.yusuan_0)
+				var states = parseInt(obj.zppsta_0)
+				var fw = document.getElementById('btn1');
+				var fwstate;
+                fw.onclick = function() {
+                $('#fawuqz').val();
+                 fwstate=$('#fawuqz option:selected').val();
+                 var yusuan1=$('#yusuan option:selected').val();
+                 var fwstates = parseInt(fwstate)
+                 var yusuan2 = parseInt(yusuan1)
+                 $('#hr1').append(
+                		 '<input type="hidden" name="yfawuqz_0" value="'+fwstates+'"><input type="hidden" name="yusuan_0" value="'+yusuan2+'">'
+                		 )
+                 }
+                 
+				$(document).click(function(e) { // 在页面任意位置点击而触发此事件
+                 var sourceDocument=($(e.target).attr("id"));       // e.target表示被点击的目标
+                
+            	if(sourceDocument=="btn1"){
+            		$('#f1').attr('action','/Approval/updateOn?rowid1='+obj.rowid);
+            	}
+                if(sourceDocument=="btn2"){
+                	$('#f1').attr('action','/Approval/updateThree?rowid3='+obj.rowid);
+                }
+                if(sourceDocument=="btn3"){
+                	$('#f1').attr('action','/Approval/updateTo?rowid2='+obj.rowid);
+                }
+                 })
+                $('#f4').attr('action','/Approval/nowjob?rowid4='+obj.rowid);
+                var page;
+                if(page!=="1"){
+                 $('#map2-result').append(
+                    '<p>原始单据号&nbsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="zppori_0" value="'+obj.zppori_0+'">'+obj.zppori_0+'</p><hr>'+
+                    '<p>&emsp;提交人&emsp;&nbsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="zppusrdes_0" value="'+obj.zppusrdes_0+'">'+obj.zppusr4_0+'</p><hr>'+
+                    '<p>&emsp;申请人&emsp;&nbsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="zppusrdes_0" value="'+obj.zppusrdes_0+'">'+obj.zppusr5_0+'</p><hr>'+
+                    '<p>&nbsp;提交日期&emsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="xppdat_0" value="'+obj.zppdat_0+'">'+obj.zppdat_0+'</p><hr>'+
+                    '<p>&nbsp;审批状态&emsp;<span>|</span>&emsp;<input type="hidden" class="pan" name="zppsta_0" value="'+states+'">'+state+'</p><hr>'+
+                    '<p>&nbsp;审批意见&emsp;<span>|</span>&emsp;<input type="text" style="border:none; outline:none;" class="pan" name="zppmemo_0"></p><hr>'+
+                    '<p>&nbsp;预算内&emsp;&emsp;<span>|</span>&emsp;'+
+                    '<select style="-webkit-appearance:none; width:200px;border:none; outline:none;" id="yusuan" >'+
+                    	'<option  value="1" id="ysNO" selected>否</option>'+
+                    	'<option  value="2" id="ysYes">是</option>'+
+                	'<select>'+
+                    '<hr>&emsp;</p>'+
+                    '<p>&nbsp;法务签字&emsp;<span>|</span>&emsp;'+
+                    '<select style="-webkit-appearance:none; width:200px;border:none; outline:none;" id="fawuqz" >'+
+                    	'<option  value="1" id="NO" selected>否</option>'+
+                        '<option  value="2" id="Yes">是</option>'+
+                    '<select>&emsp;</p>'
+                    
+                    );
+                 page="1"
+                }
+                if(obj.yfawuqz_0=="1"){
+                   $('#NO').attr('selected','selected');
+                }
+                if(obj.yfawuqz_0=="2"){
+                   $('#Yes').attr('selected','selected')
+                }
+                //预算
+                if(obj.yusuan_0=="1"){
+                   $('#ysNO').attr('selected','selected');
+                }
+                if(obj.yusuan_0=="2"){
+                   $('#ysYes').attr('selected','selected')
+                }
+                  $('#result').append(
+                            '<tr">'+
+                                '<td>'+'${ dataurl.user}'+'</td>'+
+                                '<td>'+today+'</td>'+
+                                '<td>'+zppagr+'</td>'+
+                                '<td style="border-right: solid #fff;"></td>'+
+                            '</tr>'
+                    );
+            	}
+            } //判断是已审批还是未审批结束
+        	}          
+      	})
+      	
+    }	
+           
+    </script>
+        <style>
+        p{
+            font-size: 25px;margin-top: 15px; margin-bottom: 15px;
+        }
+        span{
+            font-size: 50px; color: #ccc;
+        }
+        td{
+           border-right: solid #ccc; font-size: 35px; width: 9%; text-align:center;height: 40px; border-bottom: solid #ccc; 
+        }
+        button{
+        	background: #009BE1; font-size: 1px;color: #FFF;margin-left: 20px;margin-top:20px; width: 95%; height:80px;font-family:"等线";
+        }
+        .pan{
+        font-size: 25px;margin-top: 15px; margin-bottom: 15px;  color: #000;
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div>审批单据详情</div>
+     </header>
+     <form id="f1"  method="post">
+         <div id="map2-result" style="margin-left: 25px; font-size: 30px;">
+        </div><hr style="padding: 0;margin: 0; " id="hr1">
+        <div style="height: 50px; background: #eee;"></div>
+        <hr style="padding: 0;margin: 0;">
+        <table   id="result" style="border:solid #ccc; font-size: 25px;">
+            <tr>
+                <td>审批人</td>
+                <td>审批日期</td>
+                <td>审批结果</td>
+                <td style="border-right: solid #fff;">审批意见</td>
+            </tr>
+        </table>
+        <div class="opacity_bg" style='display:none'><div id="can"></div></div>
+			
+        <button class="btn btn-info btn-lg" id="btn1" style="font-size: 55px;" >审批同意</button>
+        <button class="btn btn-info btn-lg" id="btn2" style="font-size: 55px;" >审批不同意</button>
+         <button class="btn btn-info btn-lg" id="btn3" style="font-size: 55px;">退回申请人</button>
+        </form>
+        <form id="f4"  method="post">
+         <button class="btn btn-info btn-lg" id="btn4" style="font-size: 55px;">添加审批人</button>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,123 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport"content="width=device-width, initial-scale=1"/>
+<title>钉钉审批</title>
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="font-awesome/css/font-awesome.css">
+    <script type="text/javascript" src="js/jquery-1.4.3.js"></script> 
+    <script type="text/javascript" src="js/cookie_util.js"></script> 
+<script  type="text/javascript">
+        window.onload = function (){
+        	var phone;
+        	var username;
+            var zt;
+        	$.ajax({
+                url:'actions?yddusr_0=${tel }',
+                type:'get',
+                dataType: 'json',
+                success: function(ary){
+                    for(var i=0; i<ary.length; i++){
+                    	var list = ary[i];
+                    	console.log(list)
+                    	phone=list.yddusr_0;
+                    	username=list.usr_0;
+                        if(list.usr_0==null){
+                        	window.location.href="start404"
+                        }
+                        console.log('${tel}')
+                    addCookie("url","threes?yddusr_0="+list.yddusr_0);
+                    document.getElementById("wsp").style.color ='#4EA8ED';
+                    addCookie("tel",list.yddusr_0);
+                    addCookie("user",list.usr_0);
+                    var oBtn = document.getElementById('ysp');
+                    oBtn.onclick = function() {
+                    zt = 'ysp';
+                    document.getElementById("wsp").style.color ='#F8B55E';
+                    document.getElementById("ysp").style.color ='#4EA8ED';
+                    addCookie("url","agins?yddusr_0="+list.yddusr_0);
+                    console.log(zt)
+                    }
+                    var oBtn = document.getElementById('wsp');
+                    oBtn.onclick = function() {
+                             zt='wsp'
+                    document.getElementById("ysp").style.color ='#F8B55E';
+                    document.getElementById("wsp").style.color ='#4EA8ED';
+                    addCookie("url","threes?yddusr_0="+list.yddusr_0);
+                            console.log(zt) 
+                }
+		        }
+        	}
+        	})
+			var cgqq = document.getElementById('cgqq');
+			cgqq.onclick = function() {
+                   addCookie('qq','1')
+	               window.location.href="sr?yddusr_0="+phone+ "&username="+username
+                }
+            var xsdd = document.getElementById('xsdd');
+            xsdd.onclick = function() {
+                addCookie('qq','2')
+                   window.location.href="so?yddusr_0="+phone+ "&username="+username
+                }
+            var fkgl = document.getElementById('fkgl');
+            fkgl.onclick = function() {
+                addCookie('qq','3')
+                   window.location.href="ptp?yddusr_0="+phone+ "&username="+username
+                }
+		
+					$.ajax({
+		                url:'threes?yddusr_0='+getCookie('tel'),
+		                type:'get',
+		                dataType: 'json',
+		                success: function(ary){
+		                	// document.getElementById("1").value=ary.length;
+		                	if(ary.length>0){
+		                		$('#div1').show();
+		                	}
+		                }
+		                });
+						
+        }        
+          
+    </script>
+</head>
+<body>
+    <header id="header" style="font-size:2em">
+        <div>传奇国际</div>
+     </header>
+     <div style="height:8em;widows: 100%;text-align:center">
+    <span class="fa fa-file-text" style=" font-size: 4em;margin-right: 1.5em; margin-top:0.3em; position:relative;color: #F8B55E;" id="wsp">
+    <div id="div1" style=" width:0.4em; height:0.4em; background-color:#F00; border-radius:0.5em;position:absolute;top:-10%;position:absolute;left:60%;display:none;">
+         <input disabled="disabled" value="" id="1" style="height:0.9em; width: 1.5em;color:#fff; text-align:center;position:absolute; right:0.4em;top: 0.6em; font-size:0.2em;background-color: red; border: none;">
+        </div>
+        <span style="font-size: 0.2em;position:absolute;top:110%; left:10%;color:#000;" id="wsp">未审批</span>
+    </span>
+    <span id="ysp" class="fa fa-paste" style=" font-size: 4em;margin-left: 1em;position:relative; color: #F8B55E;">
+    <span id="ysp" style="font-size: 0.2em;position:absolute;top:110%; left:10%;color:#000;">已审批</span>
+ 	</span>
+    </div>
+    <div style="width: 100%;height: 1em; background-color: #f8f6f8;"></div>
+    <div>
+        <p style="margin-left:2em;position:relative;width: 100%;color:#4EA8ED;"><b>单据审批</b></p>
+    </div>
+    <div style ="text-align:center;">
+              <i id="cgqq" class="fa fa-square" style="color:#4EA8ED;position:relative;font-size:5em;left:-0.5em;">
+                <i id="cgqq" class="fa fa-truck" style="color: #fff;position:absolute;left:10%; top: 15%;font-size:0.6em;"></i>
+                <span id="cgqq" style="font-size: 0.1em;position:absolute;top:110%; left:23%;color:#000;">采购请求</span>
+              </i>
+              <i id="xsdd" class="fa fa-square" style="color:#4EA8ED;position:relative;font-size:5em;left:0.1em;">
+                <i id="xsdd" class="fa fa-handshake-o" style="color: #fff;position:absolute;left:10%; top: 15%;font-size:0.6em;"></i>
+                <span id="xsdd"  style="font-size: 0.1em;position:absolute;top:110%; left:23%;color:#000;">销售订单</span>
+              </i>
+              <i id="fkgl" class="fa fa-square" style="color:#4EA8ED;position:relative;font-size:5em;left:0.5em;">
+                <i id="fkgl" class="fa fa-cny" style="color: #fff;position:absolute;left:27%; top: 20%;font-size:0.6em;"></i>
+                <span id="fkgl" style="font-size: 0.1em;position:absolute;top:110%; left:23%;color:#000;">付款管理</span>
+              </i>
+        </div>
+   </body>
+</html>

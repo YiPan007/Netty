@@ -1,0 +1,691 @@
+package com.mingge.biz.impl;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.mingge.biz.ZappdataBernieBiz;
+import com.mingge.dao.ZappdataBernieDao;
+import com.mingge.pojo.Autilis;
+import com.mingge.pojo.Cacce;
+import com.mingge.pojo.Paymenth;
+import com.mingge.pojo.Prequis;
+import com.mingge.pojo.Sorder;
+import com.mingge.pojo.Sorderp;
+import com.mingge.pojo.Zappdata;
+import com.mingge.pojo.Zeaapost;
+import com.mingge.pojo.zppdataurl;
+
+@Service
+public class ZappdataBernieBizImpl implements ZappdataBernieBiz {
+	private String name;
+	private String usr_0;
+
+	@Autowired
+	private ZappdataBernieDao zappdataBernieDao;
+
+	@Override
+	public List<Zeaapost> queryZeaapost() {
+		// TODO Auto-generated method stub
+		return zappdataBernieDao.queryZeaapost();
+	}
+
+	@Override
+	public List<Autilis> queryAutilis(String yddusr_0) {
+		System.out.println(yddusr_0 + "这是第一个用户名");
+		List<Autilis> uu = zappdataBernieDao.queryAutilis(yddusr_0);
+		for (Autilis autilis : uu) {
+			usr_0 = autilis.getUsr_0();
+			name = autilis.getNomusr_0();
+		}
+		return zappdataBernieDao.queryAutilis(yddusr_0);
+	}
+
+	@Override
+	public List<Zappdata> queryZappdata(List<Autilis> list) {
+		List<String> num = new ArrayList<String>();
+		for (Autilis autilis : list) {
+
+			num.add(autilis.getZptnum_0());
+			num.add(autilis.getZptnum_1());
+			num.add(autilis.getZptnum_2());
+			num.add(autilis.getZptnum_3());
+			num.add(autilis.getZptnum_4());
+			num.add(autilis.getZptnum_5());
+			num.add(autilis.getZptnum_6());
+			num.add(autilis.getZptnum_7());
+			num.add(autilis.getZptnum_8());
+			num.add(autilis.getZptnum_9());
+			System.out.println("这是第二个字段职位" + num);
+		}
+		return zappdataBernieDao.queryZappdata(num);
+	}
+
+	@Override
+	public List<Zappdata> queryZappdataTwo(List<Autilis> list) {
+		List<String> num = new ArrayList<String>();
+		for (Autilis autilis : list) {
+			num.add(autilis.getZptnum_0());
+			num.add(autilis.getZptnum_1());
+			num.add(autilis.getZptnum_2());
+			num.add(autilis.getZptnum_3());
+			num.add(autilis.getZptnum_4());
+			num.add(autilis.getZptnum_5());
+			num.add(autilis.getZptnum_6());
+			num.add(autilis.getZptnum_7());
+			num.add(autilis.getZptnum_8());
+			num.add(autilis.getZptnum_9());
+			System.out.println("这是第三个字段职位" + num);
+		}
+		return zappdataBernieDao.queryZappdataTwo(num);
+	}
+
+	// 需要修改增加提交人申请人字段
+	@Override
+	public List<Zappdata> queryZappdataUp(String zppori_0) {
+		System.out.println("这是第五个字段原始单号" + zppori_0);
+		List<Zappdata> zappdataA1 = zappdataBernieDao.queryZappdataUp(zppori_0);
+		for (Zappdata zappdataA2 : zappdataA1) {
+			System.out.println(zappdataA2.getCodint_0() + "这是第四.1个字段原始单号类型");
+			if (zappdataA2.getCodint_0().replaceAll(" ", "").equals("GESPSH")) {
+				String pshnum_0 = zppori_0;
+				List<Prequis> pq1 = zappdataBernieDao.queruyPrequis(pshnum_0);
+				for (Prequis prequisA1 : pq1) {
+					System.out.println("=====3" + prequisA1.getRequsr_0()
+							+ "===");
+					zappdataA2.setZppusr4_0(prequisA1.getCreusr_0());
+					String cce_0 = prequisA1.getRequsr_0();
+					List<Cacce> cacceList = zappdataBernieDao.queryCacce(cce_0);
+					for (Cacce cacce : cacceList) {
+						System.out.println(cacce.getDes_0());
+						zappdataA2.setZppusr5_0(cacce.getDes_0());
+					}
+				}
+				return zappdataA1;
+			} else if (zappdataA2.getCodint_0().replaceAll(" ", "")
+					.equals("GESSOH")) {
+				String sohnum_0 = zppori_0;
+				List<Sorderp> as = zappdataBernieDao.querySorderp(sohnum_0);
+				List<Sorder> asa = zappdataBernieDao.queruySorder(sohnum_0);
+				for (Sorder sorder : asa) {
+					System.out.println("=====2" + sorder.getCreusr_0() + "===");
+					zappdataA2.setZppusr4_0(sorder.getCreusr_0());
+				}
+				for (Sorderp sorderp : as) {
+					System.out.println("=====2" + sorderp.getYcce1_0() + "===");
+					String cce_0 = sorderp.getYcce1_0();
+					List<Cacce> cacceList = zappdataBernieDao.queryCacce(cce_0);
+					for (Cacce cacce : cacceList) {
+						System.out.println(cacce.getDes_0());
+						zappdataA2.setZppusr5_0(cacce.getDes_0());
+					}
+				}
+				return zappdataA1;
+			} else if (zappdataA2.getCodint_0().replaceAll(" ", "")
+					.equals("GESPAY")) {
+				System.out.println("123456789876543");
+				String num_0 = zppori_0;
+				System.out.println(num_0);
+				List<Paymenth> patmenthList = zappdataBernieDao
+						.queruyPaymenth(num_0);
+				for (Paymenth paymenth : patmenthList) {
+					System.out.println("=====1" + paymenth.getCreusr_0()
+							+ "===");
+					zappdataA2.setZppusr4_0(paymenth.getCreusr_0());
+					zappdataA2.setZppusr5_0(paymenth.getCreusr_0());
+				}
+				return zappdataA1;
+			}
+		}
+		return zappdataBernieDao.queryZappdataUp(zppori_0);
+	}
+
+	// 需要修改增加提交人申请人字段
+	@Override
+	public List<Zappdata> queryZappdataTo(String zppori_0) {
+		System.out.println("这是第四个字段原始单号" + zppori_0);
+		List<Zappdata> zappdataA1 = zappdataBernieDao.queryZappdataTo(zppori_0);
+		for (Zappdata zappdataA2 : zappdataA1) {
+			System.out.println(zappdataA2.getCodint_0() + "这是第四.1个字段原始单号类型");
+			if (zappdataA2.getCodint_0().replaceAll(" ", "").equals("GESPSH")) {
+				String pshnum_0 = zppori_0;
+				List<Prequis> pq1 = zappdataBernieDao.queruyPrequis(pshnum_0);
+				for (Prequis prequisA1 : pq1) {
+					System.out.println("=====3" + prequisA1.getCreusr_0()
+							+ "===");
+					zappdataA2.setZppusr4_0(prequisA1.getCreusr_0());
+					String cce_0 = prequisA1.getRequsr_0();
+					List<Cacce> cacceList = zappdataBernieDao.queryCacce(cce_0);
+					for (Cacce cacce : cacceList) {
+						System.out.println("===");
+						zappdataA2.setZppusr5_0(cacce.getDes_0());
+					}
+				}
+				return zappdataA1;
+			} else if (zappdataA2.getCodint_0().replaceAll(" ", "")
+					.equals("GESSOH")) {
+				String sohnum_0 = zppori_0;
+				List<Sorderp> as = zappdataBernieDao.querySorderp(sohnum_0);
+				List<Sorder> asa = zappdataBernieDao.queruySorder(sohnum_0);
+				for (Sorder sorder : asa) {
+					System.out.println("=====2" + sorder.getCreusr_0() + "===");
+					zappdataA2.setZppusr4_0(sorder.getCreusr_0());
+				}
+				for (Sorderp sorderp : as) {
+					System.out.println("=====2" + sorderp.getYcce1_0() + "===");
+					String cce_0 = sorderp.getYcce1_0();
+					List<Cacce> cacceList = zappdataBernieDao.queryCacce(cce_0);
+					for (Cacce cacce : cacceList) {
+						System.out.println(cacce.getDes_0());
+						zappdataA2.setZppusr5_0(cacce.getDes_0());
+					}
+				}
+				return zappdataA1;
+			} else if (zappdataA2.getCodint_0().replaceAll(" ", "")
+					.equals("GESPAY")) {
+				System.out.println("123456789876543");
+				String num_0 = zppori_0;
+				System.out.println(num_0);
+				List<Paymenth> patmenthList = zappdataBernieDao
+						.queruyPaymenth(num_0);
+				for (Paymenth paymenth : patmenthList) {
+					System.out.println("=====1" + paymenth.getCreusr_0()
+							+ "===");
+					zappdataA2.setZppusr5_0(paymenth.getCreusr_0());
+					zappdataA2.setZppusr4_0(paymenth.getCreusr_0());
+				}
+				return zappdataA1;
+			}
+		}
+
+		return zappdataBernieDao.queryZappdataTo(zppori_0);
+	}
+
+	/**
+	 * 审批同意
+	 */
+	@Override
+	@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
+	public int updateZappdata(Integer rowid, Zappdata zappdata) {
+		Date date = new Date();
+		SimpleDateFormat ysdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dsdf = new SimpleDateFormat("HH:mm:ss");
+		List<Zappdata> list = zappdataBernieDao.queryZappdataUpOne(rowid);
+		for (Zappdata zappDataOne : list) {
+			zappdata.setRowid(rowid);
+			// 用户信息？？
+			zappdata.setZppusrdes_0(name);
+			zappdata.setZppusr_0(usr_0);
+			zappdata.setZppadat_0(ysdf.format(date));
+			zappdata.setZpptim_0(dsdf.format(date));
+			if (zappdata.getZppmemo_0().replaceAll(" ", "").equals("")
+					|| zappdata.getZppmemo_0() == null) {
+				zappdata.setZppmemo_0("同意");
+			}
+			System.out.println(zappdata.getYusuan_0());
+			// 最后一个流程判断预算内和法务审批
+			if (zappDataOne.getZppnumb_0().replaceAll(" ", "").equals("")
+					&& (zappdata.getYusuan_0() == 2 || zappdata.getYfawuqz_0() == 2)) {
+				List<String> l1 = new ArrayList<String>();
+				List<String> l2 = new ArrayList<String>();
+				if (zappdata.getYusuan_0() != 2 && zappdata.getYfawuqz_0() == 2) {
+					// 如果预算内为否且法务审批为是，则法务财务总监总经理
+					l1.add("06");
+					l2.add("法务");
+					l1.add("07");
+					l2.add("财务总监");
+					l1.add("01");
+					l2.add("总经理");
+				} else if (zappdata.getYusuan_0() == 2
+						&& zappdata.getYfawuqz_0() == 2) {
+					// 如果预算内为是且法务审批为是，则法务审批。
+					l1.add("06");
+					l2.add("法务");
+				}
+
+				String zppnum = zappDataOne.getZppnum_0(); // 保留原始审批单据号
+				for (int i = 0; i < l1.size(); i++) {
+					String zptnum = l1.get(i); // 职务
+					String zptnumdes = l2.get(i); // 职务描述
+					String zppnump = null;
+					Short zppcurr = 1;
+					if (i == 0) {
+						zppnump = zppnum;
+						zppcurr = 2; // 当前审批
+					} else {
+						zppnump = zppnum + "_" + String.valueOf(i + 0); // 上级单号
+					}
+					String zppnum1 = zppnum + "_" + String.valueOf(i + 1); // 当前单号
+					String zppnumb = zppnum + "_" + String.valueOf(i + 2); // 下级单号
+					zappDataOne.setZptnum_0(zptnum);
+					zappDataOne.setZptnumdes_0(zptnumdes);
+					zappDataOne.setZppnum_0(zppnum1);
+					zappDataOne.setZppnump_0(zppnump);
+					zappDataOne.setZppnumb_0(zppnumb);
+					zappDataOne.setZppcurr_0(zppcurr);
+					zappdataBernieDao.insertZappdataB1(zappDataOne); // 产生单据
+				}
+			}
+			// 判断下级为空
+			if (zappDataOne.getZppnumb_0().replaceAll(" ", "").equals("")) {
+				if (zappDataOne.getCodint_0().replaceAll(" ", "")
+						.equals("GESPSH")) {
+					String pshnum_0 = zappdata.getZppori_0();
+					// 测试时关闭下面List代码
+					List<Prequis> as = zappdataBernieDao
+							.queruyPrequis(pshnum_0);
+					System.out.println(as + "更新采购审批为已审批");
+					// 测试时打开以下代码进行审批
+					zappdataBernieDao.updatePrequis(pshnum_0);
+					System.out.println("++++++++++++++");
+					return zappdataBernieDao.updateZappdata(zappdata);
+				} else if (zappDataOne.getCodint_0().replaceAll(" ", "")
+						.equals("GESSOH")) {
+					String sohnum_0 = zappdata.getZppori_0();
+					// 测试时关闭下面List代码
+					List<Sorder> as = zappdataBernieDao.queruySorder(sohnum_0);
+					System.out.println(as + "更新采购审批为已审批");
+					// 测试时打开一下代码
+					zappdataBernieDao.updateSorder(sohnum_0);
+					return zappdataBernieDao.updateZappdata(zappdata);
+				} else if (zappDataOne.getCodint_0().replaceAll(" ", "")
+						.equals("GESPAY")) {
+					String num_0 = zappdata.getZppori_0();
+					// 测试时打开一下代码
+					zappdataBernieDao.updatePaymenth(num_0);
+					return zappdataBernieDao.updateZappdata(zappdata);
+				}
+				// 销售退货,暂时没表
+				// else if
+				// (zappData.getCodint_0().replaceAll(" ","").equals("GESSRH"))
+				// {
+				// String num_0=zappdata.getZppori_0();
+				// 测试时打开一下代码
+				// zappdataBernieDao.updatePaymenth(num_0);
+			}
+			System.out.println(zappdata.getZppmemo_0() + ","
+					+ zappdata.getZppsta_0() + "," + zappdata.getRowid());
+			// 判断下级有值
+			if (zappDataOne.getZppnumb_0().replaceAll(" ", "") != "") {
+				// System.out.println(zappdata.getYusuan_0()+"}}}}}}}}}}}}}}}");
+				if (zappdata.getYusuan_0() == 2 && zappdata.getYfawuqz_0() == 2) {
+					zappdataBernieDao.updateZappdataOneA(zappDataOne
+							.getZppnumb_0());
+					System.out.println(zappdata.getYusuan_0() + "{{{{{1}}}}}"
+							+ zappdata.getYfawuqz_0());
+				} else if (zappdata.getYusuan_0() == 2
+						&& zappdata.getYfawuqz_0() == 1) {
+					zappdataBernieDao.updateZappdataOneB(zappDataOne
+							.getZppnumb_0());
+					System.out.println(zappdata.getYusuan_0() + "{{{{{2}}}}}"
+							+ zappdata.getYfawuqz_0());
+				} else if (zappdata.getYusuan_0() == 1
+						&& zappdata.getYfawuqz_0() == 2) {
+					zappdataBernieDao.updateZappdataOneC(zappDataOne
+							.getZppnumb_0());
+					System.out.println(zappdata.getYusuan_0() + "{{{{{3}}}}}"
+							+ zappdata.getYfawuqz_0());
+				} else {
+					zappdataBernieDao.updateZappdataOne(zappDataOne
+							.getZppnumb_0());
+					System.out.println(zappdata.getYusuan_0() + "{{{{{4}}}}}"
+							+ zappdata.getYfawuqz_0());
+				}
+				return zappdataBernieDao.updateZappdata(zappdata);
+			}
+		}
+		return 1;
+	}
+
+	/**
+	 * 退回申请人
+	 */
+	@Override
+	public int updateZappdataTO(Integer rowid, Zappdata zappdata) {
+
+		Date date = new Date();
+		SimpleDateFormat ysdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dsdf = new SimpleDateFormat("HH:mm:ss");
+		List<Zappdata> list = zappdataBernieDao.queryZappdataUpOne(rowid);
+		for (Zappdata zappDataOne : list) {
+			zappdata.setRowid(rowid);
+			zappdata.setZppusrdes_0(name);
+			zappdata.setZppusr_0(usr_0);
+			zappdata.setZppadat_0(ysdf.format(date));
+			zappdata.setZpptim_0(dsdf.format(date));
+			zappdata.setYusuan_0(zappDataOne.getYusuan_0());
+			zappdata.setYfawuqz_0(zappDataOne.getYfawuqz_0());
+			if (zappdata.getZppmemo_0().replaceAll(" ", "").equals("")
+					|| zappdata.getZppmemo_0() == null) {
+				zappdata.setZppmemo_0("不同意,驳回申请人");
+			} else if (zappdata.getZppmemo_0().replaceAll(" ", "") != null) {
+				zappdata.setZppmemo_0(zappdata.getZppmemo_0() + "不同意,驳回申请人");
+			}
+			if (zappDataOne.getCodint_0().replaceAll(" ", "").equals("GESPSH")) {
+				String pshnum_0 = zappDataOne.getZppori_0();
+				// 测试时关闭下面List代码
+				// List<Prequis> as = zappdataBernieDao.queruyPrequis(pshnum_0);
+				// System.out.println(as + "更新采购审批为已审批");
+				// 测试时打开以下代码进行审批
+				zappdataBernieDao.updatePrequisOn(pshnum_0);
+				zappdataBernieDao
+						.updateZappdataThree(zappDataOne.getZppori_0());
+				// return zappdataBernieDao.updateZappdataTo(zappdata);
+
+			} else if (zappDataOne.getCodint_0().replaceAll(" ", "")
+					.equals("GESSOH")) {
+				String sohnum_0 = zappDataOne.getZppori_0();
+				// 测试时关闭下面List代码
+				List<Sorder> as = zappdataBernieDao.queruySorder(sohnum_0);
+				System.out.println(as + "更新采购审批为已审批");
+				// 测试时打开一下代码
+				zappdataBernieDao.updateSorderOn(sohnum_0);
+				zappdataBernieDao.updateZappdataTo(zappdata);
+				zappdataBernieDao
+						.updateZappdataThree(zappDataOne.getZppori_0());
+			} else if (zappDataOne.getCodint_0().replaceAll(" ", "")
+					.equals("GESPAY")) {
+				String num_0 = zappDataOne.getZppori_0();
+				// 测试时打开一下代码
+				zappdataBernieDao.updatePaymenthOn(num_0);
+				zappdataBernieDao.updateZappdataTo(zappdata);
+				zappdataBernieDao
+						.updateZappdataThree(zappDataOne.getZppori_0());
+			}
+			// 销售退货,暂时没表
+			// else if
+			// (zappData.getCodint_0().replaceAll(" ","").equals("GESSRH")) {
+			// String num_0=zappdata.getZppori_0();
+			// 测试时打开一下代码
+			// zappdataBernieDao.updatePaymenth(num_0);
+			System.out.println(zappdata.getRowid() + "======");
+			zappdataBernieDao.updateZappdataTo(zappdata);
+			zappdataBernieDao.deleteZappdata(zappDataOne.getZppori_0());
+		}
+
+		return 1;
+
+	}
+
+	// 审批不同意，返回上一级
+	@Override
+	public int updateZappdataThree(Integer rowid, Zappdata zappdata) {
+		System.out.println(zappdata.getZppmemo_0() + "这是不同意的意见");
+		Date date = new Date();
+		SimpleDateFormat ysdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dsdf = new SimpleDateFormat("HH:mm:ss");
+		List<Zappdata> list = zappdataBernieDao.queryZappdataUpOne(rowid);
+		for (Zappdata zappDataOne : list) {
+			if (zappDataOne.getZppnump_0().replaceAll(" ", "").equals("")) {
+				zappdata.setRowid(rowid);
+				zappdata.setZppusrdes_0(name);
+				zappdata.setZppusr_0(usr_0);
+				zappdata.setZppadat_0(ysdf.format(date));
+				zappdata.setZpptim_0(dsdf.format(date));
+				if ("".equals(zappdata.getZppmemo_0().replaceAll(" ", ""))
+						|| null == zappdata.getZppmemo_0()) {
+					zappdata.setZppmemo_0("不同意,返回上一级");
+				} else if (zappdata.getZppmemo_0().replaceAll(" ", "") != null) {
+					zappdata.setZppmemo_0(zappdata.getZppmemo_0() + "不同意，返回上一级");
+				}
+				this.updateZappdataTO(rowid, zappdata);
+			} else {
+				zappdata.setRowid(rowid);
+				zappdata.setZppusrdes_0(name);
+				zappdata.setZppusr_0(usr_0);
+				zappdata.setZppadat_0(ysdf.format(date));
+				zappdata.setZpptim_0(dsdf.format(date));
+				if ("".equals(zappdata.getZppmemo_0().replaceAll(" ", ""))
+						|| null == zappdata.getZppmemo_0()) {
+					zappdata.setZppmemo_0("不同意,返回上一级");
+				} else if (zappdata.getZppmemo_0().replaceAll(" ", "") != null) {
+					zappdata.setZppmemo_0(zappdata.getZppmemo_0() + "不同意，返回上一级");
+				}
+				// List<String>
+				// zppnumA=zappdataBernieDao.queryZappdata1(zappDataOne.getZppori_0());
+				System.out.println(zappDataOne.getZppnum_0() + "  :222");
+				System.out.println(zappDataOne.getZppnump_0() + "  :333");
+
+				// 判断如果zppnum39下标 为空，且zppnump39下标也为空
+				if (zappDataOne.getZppnum_0().substring(39).equals("")
+						&& zappDataOne.getZppnump_0().substring(39).equals("")) {
+					System.out.println("1:1");
+					List<String> zppnumA = zappdataBernieDao.queryZappdata1(zappDataOne.getZppnum_0());					
+					if (zppnumA.size() == 0) {
+						String a1 = zappDataOne.getZppnum_0() + "_001";
+						zappdata.setZppnum_0(a1);
+					}else{
+						String zppnumB = Collections.max(zppnumA);					
+						Integer a = Integer.parseInt(zppnumB.substring(40, 43));
+						a += 1;
+						String a1 = String.format("%03d", a);					
+						String c =zappDataOne.getZppnum_0().substring(0,39)+"_"+a1; 
+						zappdata.setZppnum_0(c);				
+					}
+					List<String> zppnumA1 = zappdataBernieDao.queryZappdata1(zappDataOne.getZppnump_0());
+					if (zppnumA1.size()==0) {
+						String B = zappDataOne.getZppnump_0() + "_001";
+						zappdata.setZppnump_0(B);
+					}else{
+						String zppnumB = Collections.max(zppnumA1);
+						Integer b = Integer.parseInt(zppnumB.substring(40, 43));
+						b += 2;
+						String d = String.format("%03d", b);
+						String b1 = zappDataOne.getZppnump_0().substring(0, 40) + d;
+						zappdata.setZppnump_0(b1);
+					}
+					zappdataBernieDao.updateZappdata12(zappdata);
+					zappdataBernieDao.updateZappdata1(zappdata);
+					zappdataBernieDao.updateZappdata11(zappdata);
+					zappdataBernieDao.insertZappdata2(zappdata);
+					zappdataBernieDao.insertZappdata3(zappdata);
+				}
+	// 判断zppnum39下标无值且zppnump39下标有值
+				else if (zappDataOne.getZppnum_0().substring(39).equals("")
+						&& zappDataOne.getZppnump_0().substring(39, 40)
+								.equals("_")) {
+					System.out.println("1:4");
+					List<String> zppnumA = zappdataBernieDao.queryZappdata1(zappDataOne.getZppnum_0());
+					String a1;
+					String c;
+					if (zppnumA.size() == 0) {
+						 a1 = zappDataOne.getZppnum_0() + "_001";
+						 zappdata.setZppnum_0(a1);
+					}else{
+						String zppnumB = Collections.max(zppnumA);					
+						Integer a = Integer.parseInt(zppnumB.substring(40, 43));
+						a += 1;
+						a1 = String.format("%03d", a);					
+						c =zappDataOne.getZppnum_0().substring(0,39)+"_"+a1; 
+						zappdata.setZppnum_0(c);				
+					}
+					List<String> zppnumA1 = zappdataBernieDao.queryZappdata1(zappDataOne.getZppnump_0());
+					String zppnumB = Collections.max(zppnumA1);
+					Integer b = Integer.parseInt(zppnumB.substring(40, 43));
+					b += 2;
+					String d = String.format("%03d", b);
+					String b1 = zappDataOne.getZppnump_0().substring(0, 40) + d;
+					zappdata.setZppnump_0(b1);
+					zappdataBernieDao.updateZappdata12(zappdata);
+					zappdataBernieDao.updateZappdata1(zappdata);
+					zappdataBernieDao.updateZappdata11(zappdata);
+					zappdataBernieDao.insertZappdata2(zappdata);
+					zappdataBernieDao.insertZappdata3(zappdata);
+				}
+				// 判断如果zppnum39下标有值，且zppnump39下标为空
+				else if (zappDataOne.getZppnum_0().substring(39, 40)
+						.equals("_")
+						&& zappDataOne.getZppnump_0().substring(39).equals("")) {
+					System.out.println("1:2");
+					
+					List<String> zppnumA = zappdataBernieDao.queryZappdata1(zappDataOne.getZppnum_0());
+					String zppnumB = Collections.max(zppnumA);
+					Integer a = Integer.parseInt(zppnumB.substring(40, 43));
+					a += 1;
+					String a1 = String.format("%03d", a);
+					String b1 = zappDataOne.getZppnum_0().substring(0, 40) + a1;
+					zappdata.setZppnum_0(b1);
+					
+					List<String> zppnumB1 = zappdataBernieDao.queryZappdata1(zappDataOne.getZppnump_0());
+					if (zppnumB1.size() == 0) {
+						 a1 = zappDataOne.getZppnump_0() + "_001";
+						 zappdata.setZppnump_0(a1);
+					}else{
+						String zppnumB2 = Collections.max(zppnumB1);					
+						Integer b3 = Integer.parseInt(zppnumB2.substring(40, 43));
+						b3 += 2;
+						String c= String.format("%03d", b3);					
+						c =zappDataOne.getZppnump_0().substring(0,39)+"_"+c; 
+						zappdata.setZppnump_0(c);
+						System.out.println(c+":=33333444");
+					}
+					zappdataBernieDao.updateZappdata12(zappdata);
+					zappdataBernieDao.updateZappdata1(zappdata);
+					zappdataBernieDao.updateZappdata11(zappdata);
+					zappdataBernieDao.insertZappdata2(zappdata);
+					zappdataBernieDao.insertZappdata3(zappdata);
+				}
+				// 判断zppnum39下标有值且zppnump39下标也有值
+				else if (zappDataOne.getZppnum_0().substring(39, 40)
+						.equals("_")
+						&& zappDataOne.getZppnump_0().substring(39, 40)
+								.equals("_")) {
+					System.out.println("1:3");
+					String zppnumA = zappDataOne.getZppnum_0().substring(0, 39);
+					List<String> zppnumA1= zappdataBernieDao.queryZappdata1(zppnumA);
+					String zppnumB = Collections.max(zppnumA1);
+					Integer a = Integer.parseInt(zppnumB.substring(40, 43));
+					a += 1;
+					String d = String.format("%03d", a);
+					String a1 = zappDataOne.getZppnum_0().substring(0, 40) + d;
+					zappdata.setZppnum_0(a1);
+					
+					String zppnumB2 = zappDataOne.getZppnum_0().substring(0, 39);
+					List<String> zppnumB1= zappdataBernieDao.queryZappdata1(zppnumB2);
+					String zppnumB3 = Collections.max(zppnumB1);
+					Integer b = Integer.parseInt(zppnumB3.substring(40, 43));
+					b += 2;
+					String d1 = String.format("%03d", b);
+					String b1 = zappDataOne.getZppnump_0().substring(0, 40)+ d1;
+					zappdata.setZppnump_0(b1);
+					System.out.println(zappdata.getZppnum_0()+" :123 "+zappdata.getZppnump_0());
+					zappdataBernieDao.updateZappdata12(zappdata);
+					zappdataBernieDao.updateZappdata1(zappdata);
+					zappdataBernieDao.updateZappdata11(zappdata);
+					zappdataBernieDao.insertZappdata2(zappdata);
+					zappdataBernieDao.insertZappdata3(zappdata);
+				}
+				
+			}
+		}
+
+		return 0;
+	}
+
+	// 增加职位
+
+	@Override
+	public int insertIntoZappdata(Integer rowid, Zappdata zappdata) {
+		// 通过rowid查询本级单据信息
+		List<Zappdata> list = zappdataBernieDao.queryZappdataUpOne(rowid);
+		Date date = new Date();
+		SimpleDateFormat ysdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dsdf = new SimpleDateFormat("HH:mm:ss");
+		zappdata.setRowid(rowid);
+		zappdata.setZppusrdes_0(name);
+		zappdata.setZppusr_0(usr_0);
+		zappdata.setZppadat_0(ysdf.format(date));
+		zappdata.setZpptim_0(dsdf.format(date));
+		Integer xid=0;
+		for (Zappdata zappdataA : list) {
+			// 没有上级单据运行此方法
+			System.out.println("1");
+			if (zappdataA.getZppnump_0().replaceAll(" ", "").equals("")
+					|| zappdataA.getZppnump_0().replaceAll(" ", "")
+							.equals("_A")) {	
+				System.out.println("2");
+				String zppnumA1 = zappdataA.getZppnum_0().substring(0, 39);
+				List<String> zppnumA = zappdataBernieDao
+						.queryZappdata1(zppnumA1);
+				if (zppnumA.size() == 0) {
+					// 这里需要修改
+					System.out.println("2:2:1");
+					String A = zappdataA.getZppnum_0() + "_001";
+					zappdata.setZppnum_0(A);
+					System.out.println(zappdata.getZppnum_0() + "212");
+					 zappdataBernieDao.updateZappdataA21(zappdata);
+					 zappdataBernieDao.insertZappdataA31(zappdata);
+					 xid = zappdataBernieDao.queryZappdataByzppnum(zappdata.getZppnum_0());
+
+				} else {
+					System.out.println("3");
+					String zppnumB = Collections.max(zppnumA);
+					System.out.println(zppnumB);
+					String[] strs = zppnumB.split("_");
+					//System.out.println(zppnumB.substring(40, 43));
+					Integer a = 0;
+					if (strs.length>1) {
+						a = Integer.parseInt(strs[1]);
+					}
+					//Integer a = Integer.parseInt(zppnumB.substring(40, 43));
+					a += 1;
+					String a1 = String.format("%03d", a);
+					//System.out.println(zppnumB.substring(0, 40));
+					String b = strs[0];//zppnumB.substring(0, 40);
+					a1 = b +"_"+ a1;
+					zappdata.setZppnum_0(a1);
+					zappdataBernieDao.updateZappdataA21(zappdata);
+					zappdataBernieDao.insertZappdataA31(zappdata);
+					xid = zappdataBernieDao.queryZappdataByzppnum(zappdata.getZppnum_0());
+				}
+				// 判断如果上级下级都有值
+			} else {		
+				System.out.println("4");
+				String zppnumA1 = zappdataA.getZppnum_0().substring(0, 39);
+				List<String> zppnumA = zappdataBernieDao
+						.queryZappdata1(zppnumA1);
+				if (zppnumA.size() == 0) {
+					// 这里需要修改
+					String A = zappdataA.getZppnum_0() + "_001";
+					zappdata.setZppnum_0(A);
+					System.out.println(zappdata.getZppnum_0() + "qqqqqqqq");
+					zappdataBernieDao.insertZappdataA32(zappdata);
+					xid = zappdataBernieDao.queryZappdataByzppnum(zappdata.getZppnum_0());
+					zappdataBernieDao.updateZappdataA12(zappdata);
+					zappdataBernieDao.updateZappdataA22(zappdata);
+				} else {
+					String zppnumB = Collections.max(zppnumA);
+					String[] strs = zppnumB.split("_");
+					
+					Integer a = 0;
+					if (strs.length>1) {
+						a = Integer.parseInt(strs[1]);
+					}
+					System.out.println(zppnumB);
+					//Integer a = Integer.parseInt(zppnumB.substring(40, 43));
+					a += 1;
+					String a1 = String.format("%03d", a);
+					//System.out.println(zppnumB.substring(0, 40));
+					String b = strs[0];//zppnumB.substring(0, 40);
+					a1 = b +"_"+ a1;
+					zappdata.setZppnum_0(a1);
+					zappdataBernieDao.insertZappdataA32(zappdata);
+					xid = zappdataBernieDao.queryZappdataByzppnum(zappdata.getZppnum_0());
+					zappdataBernieDao.updateZappdataA12(zappdata);
+					zappdataBernieDao.updateZappdataA22(zappdata);
+				}
+			}
+		}
+
+		return xid;
+	}
+
+}

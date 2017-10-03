@@ -1,0 +1,102 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport"content="width=device-width, initial-scale=1"/>
+<title>钉钉审批</title>
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="js/jquery-1.4.3.js"></script> 
+<script  type="text/javascript">
+        window.onload = function (){
+        	var num = new Array();
+        	var phone;
+        	var arys;
+        	var username;
+        	$.ajax({
+
+                url:'actions?yddusr_0=${tel }',
+
+                type:'get',
+                dataType: 'json',
+                success: function(ary){
+                    for(var i=0; i<ary.length; i++){
+                    	var list = ary[i];
+                    	console.log(list)
+                        if(list.usr_0==null){
+                        	window.location.href="start404"
+                        }
+                        console.log('${tel}')
+                        if(list.zptnum_0!==" "){num.push(list.zptdes_0)}
+                        if(list.zptnum_1!==" "){num.push(list.zptdes_1)}
+                        if(list.zptnum_2!==" "){num.push(list.zptdes_2)}
+                        if(list.zptnum_3!==" "){num.push(list.zptdes_3)}
+                        if(list.zptnum_4!==" "){num.push(list.zptdes_4)}
+                        if(list.zptnum_5!==" "){num.push(list.zptdes_5)}
+                        if(list.zptnum_6!==" "){num.push(list.zptdes_6)}
+                        if(list.zptnum_7!==" "){num.push(list.zptdes_7)}
+                        if(list.zptnum_8!==" "){num.push(list.zptdes_8)}
+                        if(list.zptnum_9!==" "){num.push(list.zptdes_9)}
+                        phone=list.yddusr_0;
+                        username=list.usr_0;
+                        console.log(num.length)
+		                $('#map2-result').append(
+		                    '<div>'+'<p>'+'姓名:&emsp;'+list.nomusr_0+'</p><hr><br><p>'+'电话:&emsp;<span>'+ list.yddusr_0 +
+		                    '</span><hr><br>'+'职位:&emsp;'+
+		                    num+'</p><hr><p>');  
+		            }
+		        },
+                error : function(xhr, errorType, error) {
+					alert(errorType + '登陆失败，请重试, ' + error+'');
+				}
+        	
+        	})
+        	
+        
+            var oBtn = document.getElementById('ysp');
+        	
+        	
+				oBtn.onclick = function() {
+				if(num.length==0){
+				window.location.href="start404"
+				}else{
+					$(document).click(function(e) { // 在页面任意位置点击而触发此事件
+		                arys=($(e.target).attr("id"));       // e.target表示被点击的目标
+		               window.location.href="check?yddusr_0="+phone+ "&zt="+ arys+"&username="+username
+		    			console.log(arys)
+		                
+		            })
+		            }
+			}
+			
+			var oBtn = document.getElementById('wsp');
+		        	
+					oBtn.onclick = function() {
+					if(num.length==0){
+						window.location.href="start404"
+						}else{
+						$(document).click(function(e) { // 在页面任意位置点击而触发此事件
+			                arys=($(e.target).attr("id"));       // e.target表示被点击的目标
+			                window.location.href="checkA?yddusr_0="+phone+ "&zt="+ arys+"&username="+username
+			    			console.log(arys)
+			                
+			            })
+			            }
+				}
+					
+        }        
+          
+    </script>
+</head>
+<body>
+    <header id="header" style="font-size:2em">
+        <div>传奇国际</div>
+     </header>
+    <div id="map2-result" style=" font-size: 2em;margin: 1em;"></div>
+    <button id="ysp" class="btn btn-primary btn-lg" style="background: #009BE1; font-size: 2em;color: #FFF;margin: 0.5em; width: 40%;">已审批</button>
+    <button id="wsp" class="btn btn-primary btn-lg" style="background: #009BE1; font-size: 2em;color: #FFF;margin: 0.5em;width: 40%;">未审批</button>
+   </body>
+</html>

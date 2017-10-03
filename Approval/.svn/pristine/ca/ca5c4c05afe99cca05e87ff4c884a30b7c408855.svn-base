@@ -1,0 +1,100 @@
+package com.mingge.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.mingge.pojo.Autilis;
+import com.mingge.pojo.Cacce;
+import com.mingge.pojo.Paymenth;
+import com.mingge.pojo.Prequis;
+import com.mingge.pojo.Prequisd;
+import com.mingge.pojo.Sorder;
+import com.mingge.pojo.Sorderp;
+import com.mingge.pojo.Ysqneir;
+import com.mingge.pojo.Zappdata;
+import com.mingge.pojo.Zeaapost;
+
+public interface ZappdataBernieDao {
+
+	public List<Zeaapost> queryZeaapost();
+	
+	public List<Autilis>  queryAutilis(@Param(value="yddusr_0")String yddusr_0);
+
+	public List<Zappdata> queryZappdata(@Param(value="num")List<String> num);
+	
+	public List<Zappdata> queryZappdataTo(@Param(value="zppori_0")String zppori_0);
+	public Integer queryZappdataByzppnum(@Param(value="zppnum_0")String zppnum_0);
+	
+	public List<Zappdata> queryZappdataTwo(@Param(value="num")List<String> num);
+
+	public List<Zappdata> queryZappdataUp(@Param(value="zppori_0")String zppori_0);
+	
+	public List<Zappdata> queryZappdataUpOne(@Param(value="rowid")Integer rowid);
+
+	public List<Prequis>  queruyPrequis(@Param(value="pshnum_0")String pshnum_0);
+	public List<Ysqneir>  queruyPrequis1(@Param(value="ypshnum_0")String ypshnum_0);
+	public List<Prequisd>  queruyPrequis2(@Param(value="pshnum_0")String pshnum_0);
+	
+	public List<Sorder>   queruySorder(@Param(value="sohnum_0")String sohnum_0);
+	
+	public List<Paymenth> queruyPaymenth(@Param(value="num_0")String num_0);
+	
+	public int updatePrequis(@Param(value="pshnum_0")String pshnum_0);
+	
+	public int updateSorder(@Param(value="sohnum_0")String sohnum_0);
+	
+	public int updatePaymenth(@Param(value="num_0")String num_0);
+	
+	public int updateZappdata(Zappdata zappdata);
+	
+	public int updateZappdataOne (@Param(value="zppnumb_0")String zppnumb_0);
+	public int updateZappdataOneA(@Param(value="zppnumb_0")String zppnumb_0);
+	public int updateZappdataOneB(@Param(value="zppnumb_0")String zppnumb_0);
+	public int updateZappdataOneC(@Param(value="zppnumb_0")String zppnumb_0);
+	
+	public int updateZappdataTo(Zappdata zappdata);
+	
+	public int deleteZappdata(@Param(value="zppori_0")String zppori_0);
+	
+	public int updatePrequisOn(@Param(value="pshnum_0")String pshnum_0);
+	
+	public int updateSorderOn(@Param(value="sohnum_0")String sohnum_0);
+	
+	public int updatePaymenthOn(@Param(value="num_0")String num_0);
+	
+	public int updateZappdataThree(@Param(value="zppori_0")String zppori_0);
+	
+	public int updateZappdata1(Zappdata zappdata);
+	
+	public int updateZappdata11(Zappdata zappdata);
+	
+	public int updateZappdata12(Zappdata zappdata);
+	
+	public int insertZappdata2(Zappdata zappdata);
+	
+	public int insertZappdata3(Zappdata zappdata);
+	
+	
+	public int updateZappdataA1(Zappdata zappdata);
+	public int updateZappdataA12(Zappdata zappdata);
+	
+	public int updateZappdataA2(Zappdata zappdata);
+	
+	public int updateZappdataA21(Zappdata zappdata);
+	public int updateZappdataA22(Zappdata zappdata);
+	
+	public int insertZappdataA3(Zappdata zappdata);
+	
+	public int insertZappdataA31(Zappdata zappdata);
+	public int insertZappdataA32(Zappdata zappdata);
+		
+	public int insertZappdataB1(Zappdata zappdata);	//法务预算复制产生单据
+	
+	public List<Cacce>  queryCacce(@Param(value="cce_0")String cce_0);
+	
+	public List<Sorderp>  querySorderp(@Param(value="sohnum_0")String sohnum_0);
+	
+	public List<String>  queryZappdata1(@Param(value="zppnum_0")String zppnum_0);
+	//public List<Zappdata> queryZappdataUpTree(@Param(value="zppnumb_0")String zppnumb_0);
+}
